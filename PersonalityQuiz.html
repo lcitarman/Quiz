@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personality Quiz</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f2f2f2; padding: 20px; }
+    .quiz-container { background: #fff; padding: 20px; max-width: 600px; margin: auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h1 { text-align: center; }
+    .question { margin-bottom: 20px; }
+    button { background: #4CAF50; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; }
+    button:hover { background: #45a049; }
+    .result { margin-top: 20px; text-align: center; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Personality Quiz</h1>
+    <form id="quizForm"></form>
+    <button onclick="submitQuiz()">Submit</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        text: "How do you feel before sleeping at night?",
+        options: [
+          { text: "Tired", score: 10 },
+          { text: "Unhappy", score: 0 },
+          { text: "Comfortable", score: 20 }
+        ]
+      },
+      {
+        text: "You got 70 marks out of 100. What is your reaction?",
+        options: [
+          { text: "Not Fair", score: 0 },
+          { text: "I tried my best", score: 20 },
+          { text: "Some questions were tough", score: 10 }
+        ]
+      },
+      {
+        text: "A friend gives his assignment or homework to you",
+        options: [
+          { text: "Why not? sure! After all, you are my buddy", score: 20 },
+          { text: "ok, I will help this time", score: 10 },
+          { text: "Refuse with excuse", score: 0 }
+        ]
+      },
+      {
+        text: "Time is short to deliver a project",
+        options: [
+          { text: "Everything will be fine", score: 10 },
+          { text: "Impossible to complete", score: 0 },
+          { text: "I will do this", score: 20 }
+        ]
+      },
+      {
+        text: "In a restaurant, a waiter gives you water while you order a cold drink",
+        options: [
+          { text: "Complain to the manager about the bad service", score: 0 },
+          { text: "smile and ask for a cold drink", score: 10 },
+          { text: "Accept the water and said I think you are worried today", score: 20 }
+        ]
+      },
+      {
+        text: "If you suddenly lost your wallet or purse",
+        options: [
+          { text: "Omg, why this problem", score: 10 },
+          { text: "I should take care of my things", score: 20 },
+          { text: "Why does it always happen to me", score: 0 }
+        ]
+      },
+      {
+        text: "Invitation by a friend to Party",
+        options: [
+          { text: "Wastage of Time", score: 0 },
+          { text: "Wow, I will enjoy this", score: 20 },
+          { text: "I have no work, let's go to the party", score: 10 }
+        ]
+      },
+      {
+        text: "If a glass has half water and half is empty what the glass is",
+        options: [
+          { text: "Drink the water, my dear", score: 10 },
+          { text: "Half Empty", score: 0 },
+          { text: "Half Full", score: 20 }
+        ]
+      }
+    ];
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    shuffle(questions);
+    questions.forEach(q => shuffle(q.options));
+
+    const quizForm = document.getElementById("quizForm");
+    questions.forEach((q, index) => {
+      const div = document.createElement("div");
+      div.className = "question";
+      div.innerHTML = `<p><strong>Q${index + 1}:</strong> ${q.text}</p>` +
+        q.options.map((opt, i) => `
+          <label>
+            <input type="radio" name="q${index}" value="${opt.score}" required> ${opt.text}
+          </label><br>
+        `).join('');
+      quizForm.appendChild(div);
+    });
+
+    function submitQuiz() {
+      const form = new FormData(quizForm);
+      let totalScore = 0;
+      for (let [_, value] of form.entries()) {
+        totalScore += parseInt(value);
+      }
+
+      let resultText = "";
+      if (totalScore < 60) {
+        resultText = "You're a Negative Person ❌";
+      } else if (totalScore < 120) {
+        resultText = "You're a Neutral Person ⚖️";
+      } else {
+        resultText = "You're a Positive Person ✅";
+      }
+
+      document.getElementById("result").textContent = `Your score: ${totalScore}. ${resultText}`;
+    }
+  </script>
+</body>
+</html>
